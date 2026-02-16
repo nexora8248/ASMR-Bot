@@ -1,0 +1,38 @@
+name: Daily Post Automation
+
+on:
+  schedule:
+    - cron: '0 4 * * *' # यह हर दिन सुबह भारतीय समयानुसार 9:30 बजे चलेगा
+  workflow_dispatch: # यह बटन देगा जिससे आप जब चाहें मैन्युअल रूप से चला सकें
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: python main.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "Updated history and cleaned old videos [skip ci]" || echo "No changes to commit"
+          git push
