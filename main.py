@@ -1,4 +1,4 @@
-import os
+toimport os
 import requests
 import json
 import random
@@ -86,14 +86,29 @@ selected_caption = random.choice(CAPTIONS)
 # Format: https://raw.githubusercontent.com/username/repo/branch/videos/filename.mp4
 raw_video_link = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/{VIDEOS_DIR}/{new_video}"
 
-# 5. Telegram Posting
-full_msg = f"✨ *{selected_title}*\n\n{selected_caption}\n\n*SEO:* {SEO_HASHTAGS}\n\n*Insta:* {INSTA_SEO_HASHTAGS}"
+# 5. Telegram Posting Format (Updated as per your request)
+# यहाँ हमने सिर्फ SEO Hashtags रखे हैं और बीच में डॉट्स (.) लगाए हैं
+full_msg = (
+    f"*{selected_title}*\n"
+    f"{selected_caption}\n"
+    ".\n"
+    ".\n"
+    ".\n"
+    ".\n"
+    f"{SEO_HASHTAGS}"
+)
 
 try:
     tg_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendVideo"
     with open(os.path.join(VIDEOS_DIR, new_video), 'rb') as f:
-        requests.post(tg_url, data={'chat_id': CHAT_ID, 'caption': full_msg, 'parse_mode': 'Markdown'}, files={'video': f})
-
+        # कैप्शन को नए फॉर्मेट के साथ भेज रहे हैं
+        requests.post(tg_url, data={
+            'chat_id': CHAT_ID, 
+            'caption': full_msg, 
+            'parse_mode': 'Markdown'
+        }, files={'video': f})
+    
+    # बाकी का Webhook वाला हिस्सा वैसा ही रहेगा जैसा पहले था (वहाँ इंस्टा टैग्स जाते रहेंगे)
     # 6. Webhook Posting
     webhook_data = {
         "video_link": raw_video_link,
