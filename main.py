@@ -1,4 +1,4 @@
-toimport os
+import os
 import requests
 import json
 import random
@@ -8,49 +8,55 @@ from datetime import datetime
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
-GITHUB_REPO = os.environ.get('GITHUB_REPOSITORY') # Auto-provided by GitHub Actions
+GITHUB_REPO = os.environ.get('GITHUB_REPOSITORY')
 
 VIDEOS_DIR = 'videos'
 HISTORY_FILE = 'history.json'
 
-# --- Universal Data Pool ---
+# --- ASMR USA Targeted Data Pool (50+ Titles & Captions) ---
 TITLES = [
-    "Amazing Moments", "Don't Miss This", "Life is Beautiful", "Daily Dose of Magic", 
-    "Nature's Wonder", "Incredible Skill", "Pure Happiness", "Something Special",
-    "Watch Until The End", "Mind Blowing", "A Day to Remember", "Heart Touching",
-    "Simply The Best", "Experience Joy", "Unforgettable Vibes", "Classic Content",
-    "Keep Smiling", "Positive Vibes Only", "Today's Highlight", "Golden Moments",
-    "Stay Inspired", "Beyond Perfection", "Visual Treat", "Masterpiece", "Creative Mind",
-    "Weekend Vibes", "Relaxing Time", "Adventure Awaits", "Dream Big", "Stay Focused",
-    "Next Level", "Peaceful Escape", "Life's Short, Enjoy", "Awesome Energy",
-    "The Secret of Joy", "Beautiful Journey", "Limitless Bliss", "Trending Now",
-    "Must See", "Feel Good Post", "Epic Discovery", "Smooth & Clean", "Magic in Air",
-    "Believe in Yourself", "True Beauty", "Wait for it", "Perfectly Done", "Inspiring",
-    "Unseen Beauty", "Classic View", "World's Best", "Legendary Shot"
+    "Relaxing ASMR Tingles", "Deep Sleep Triggers", "Satisfying Slime Sounds", "Ultra Quiet Whispers",
+    "Brain Melting ASMR", "The Ultimate Relaxation", "Crushing Soft Things", "ASMR for Anxiety Relief",
+    "No Talking Just Tingles", "Oddly Satisfying ASMR", "Visual Triggers for Sleep", "Fast & Aggressive ASMR",
+    "Soap Carving Therapy", "Kinetic Sand Cutting", "Tingly Ear Massage", "Intense Mouth Sounds",
+    "Gentle Tapping & Scratching", "Water Droplet Sounds", "ASMR Cooking Sounds", "Microphone Brushing",
+    "Page Turning Softly", "Keyboard Typing ASMR", "Ice Crushing Sounds", "Wood Fire Crackling",
+    "Rainy Night Relaxation", "Stress Relief ASMR", "Sleep Induction Sounds", "Hand Movements ASMR",
+    "Personal Attention ASMR", "Meditation & Tingles", "Nature ASMR Therapy", "Soft Foam Squishing",
+    "Brush Sounds on Mic", "Deep Relaxation Journey", "ASMR for Deep Focus", "Hypnotic ASMR Visuals",
+    "Lofi ASMR Vibes", "Tingly Scalp Massage", "Calming Fabric Sounds", "Satisfying Crunchy ASMR",
+    "ASMR Magic for Sleep", "Instant Tingle Fix", "Whispered Bedtime Stories", "Binaural Beats ASMR",
+    "Wooden Toy Sounds", "Paper Crinkling ASMR", "Fluffy Mic Triggers", "ASMR Glow Therapy"
 ]
 
 CAPTIONS = [
-    "This will make your day!", "Success is a journey, not a destination.", "Every moment is a fresh beginning.",
-    "Do more of what makes you happy.", "Life is better when you're laughing.", "Your vibe attracts your tribe.",
-    "Collect moments, not things.", "Small steps every day lead to big results.", "Radiate positivity everywhere you go.",
-    "The best is yet to come.", "Be a voice, not an echo.", "Turn your dreams into reality.",
-    "Consistency is key.", "Stay humble, work hard, be kind.", "Happiness depends upon ourselves.",
-    "Enjoy the little things in life.", "Focus on the good.", "Make today amazing.", "Dream it. Wish it. Do it.",
-    "Kindness is free, sprinkle it everywhere.", "Don't stop until you're proud.", "Great things take time.",
-    "Be the reason someone smiles today.", "Life is tough but so are you.", "Escape the ordinary.",
-    "Follow your heart.", "Better things are coming.", "Believe you can and you're halfway there.",
-    "Keep it simple.", "Stay true to yourself.", "Grateful for today.", "New day, new goals.",
-    "Push yourself to the limit.", "Confidence is silent, insecurities are loud.", "Choose joy every single day.",
-    "Live, laugh, love.", "Stop wishing, start doing.", "Create your own sunshine.", "The journey of a thousand miles begins with a single step.",
-    "One day at a time.", "Seize the day.", "Be the change you want to see.", "Good things are coming.",
-    "Everything happens for a reason.", "Keep glowing.", "Don't wait for opportunity, create it.",
-    "Sunsets and silhouettes.", "Less perfection, more authenticity.", "Adventure is out there.",
-    "Self-love is the best love.", "Quiet the mind and the soul will speak."
+    "Close your eyes and let the tingles take over.", "The perfect escape from a stressful day.",
+    "Wear headphones for the best experience. 🎧", "Fall asleep in less than 5 minutes.",
+    "Bringing you the most satisfying sounds on Earth.", "Your daily dose of pure relaxation.",
+    "Let these sounds melt your brain. ✨", "Focus better with these calming triggers.",
+    "Which trigger was your favorite? Let me know! 👇", "Healing your soul, one sound at a time.",
+    "Gentle reminders to breathe and relax.", "Transform your night with deep sleep ASMR.",
+    "Oddly satisfying visuals for a peaceful mind.", "Find your zen in this noisy world.",
+    "Experience the ultimate brain massage.", "No talking, just pure tingly vibes.",
+    "ASMR sounds that feel like a warm hug.", "Unlocking the secret to instant sleep.",
+    "Satisfying your senses with every clip.", "Relax, recharge, and repeat.",
+    "The science of tingles is here.", "Escaping reality with satisfying triggers.",
+    "Sweet dreams start with these sounds.", "Experience binaural magic. 🌙",
+    "Calm your anxiety instantly.", "Soft sounds for a loud world.",
+    "Dive into a world of sensory bliss.", "Precision sounds for deep relaxation.",
+    "Tingles that travel down your spine.", "Your bedtime routine just got better.",
+    "Satisfyingly crisp and clean sounds.", "Mindful moments with ASMR.",
+    "Unlock peace through your ears.", "The ultimate tingle challenge!",
+    "Crunchy, soft, and everything in between.", "Rest your weary mind tonight.",
+    "Tingly triggers you didn't know you needed."
 ]
 
-# SEO & Instagram Viral Hashtags
-SEO_HASHTAGS = "#viral #trending #video #shorts #explore #reels #foryou #status #contentcreator #top #popular #dailyvideo #socialmedia #bestvideo #viralpost"
-INSTA_SEO_HASHTAGS = "#instadaily #reelkarofeelkaro #trendingreels #viralvideos #explorepage"
+# --- SEO & Insta Hashtags for USA/Global ASMR ---
+# SEO Hashtags: Targeted for US Search & Discovery
+SEO_HASHTAGS = "#ASMR #SleepAid #Relaxation #Satisfying #Tingles #OddlySatisfying #StressRelief #DeepSleep #ASMRCommunity #Mindfulness #Sensory #USA #TrendingVideo #BrainMassage"
+
+# Insta SEO Hashtags: Top 5 Viral for Instagram Reels
+INSTA_SEO_HASHTAGS = "#asmrvideo #satisfyingvideo #reelsusa #asmrtingles #explorepage"
 
 # 1. History load & 15 days clean-up
 history = {}
@@ -59,36 +65,39 @@ if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
             history = data if isinstance(data, dict) else {}
-    except: history = {}
+    except:
+        history = {}
 
 now = datetime.now()
 current_history = history.copy()
 
 for vid, d_str in history.items():
-    if (now - datetime.fromisoformat(d_str)).days >= 15:
-        p = os.path.join(VIDEOS_DIR, vid)
-        if os.path.exists(p): os.remove(p)
-        if vid in current_history: del current_history[vid]
+    try:
+        if (now - datetime.fromisoformat(d_str)).days >= 15:
+            p = os.path.join(VIDEOS_DIR, vid)
+            if os.path.exists(p): os.remove(p)
+            if vid in current_history: del current_history[vid]
+    except: pass
 
 # 2. Pickup new video
+if not os.path.exists(VIDEOS_DIR): os.makedirs(VIDEOS_DIR)
 all_vids = [f for f in os.listdir(VIDEOS_DIR) if f.endswith('.mp4')]
 new_video = next((v for v in all_vids if v not in current_history), None)
 
 if not new_video:
     with open(HISTORY_FILE, 'w') as f: json.dump(current_history, f, indent=4)
+    print("No new ASMR video found.")
     exit(0)
 
-# 3. Random Title & Caption selection
+# 3. Random Selection
 selected_title = random.choice(TITLES)
 selected_caption = random.choice(CAPTIONS)
 
-# 4. Generate GitHub Raw Link
-# Format: https://raw.githubusercontent.com/username/repo/branch/videos/filename.mp4
+# 4. GitHub Raw Link
 raw_video_link = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/{VIDEOS_DIR}/{new_video}"
 
-# 5. Telegram Posting Format (Updated as per your request)
-# यहाँ हमने सिर्फ SEO Hashtags रखे हैं और बीच में डॉट्स (.) लगाए हैं
-full_msg = (
+# 5. Telegram Posting Format (Requested Format)
+tg_full_msg = (
     f"*{selected_title}*\n"
     f"{selected_caption}\n"
     ".\n"
@@ -99,16 +108,11 @@ full_msg = (
 )
 
 try:
+    # Telegram Upload
     tg_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendVideo"
     with open(os.path.join(VIDEOS_DIR, new_video), 'rb') as f:
-        # कैप्शन को नए फॉर्मेट के साथ भेज रहे हैं
-        requests.post(tg_url, data={
-            'chat_id': CHAT_ID, 
-            'caption': full_msg, 
-            'parse_mode': 'Markdown'
-        }, files={'video': f})
-    
-    # बाकी का Webhook वाला हिस्सा वैसा ही रहेगा जैसा पहले था (वहाँ इंस्टा टैग्स जाते रहेंगे)
+        requests.post(tg_url, data={'chat_id': CHAT_ID, 'caption': tg_full_msg, 'parse_mode': 'Markdown'}, files={'video': f})
+
     # 6. Webhook Posting
     webhook_data = {
         "video_link": raw_video_link,
@@ -121,7 +125,9 @@ try:
 
     # 7. Update History
     current_history[new_video] = now.isoformat()
-    with open(HISTORY_FILE, 'w') as f: json.dump(current_history, f, indent=4)
-    print(f"Posted: {new_video}")
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(current_history, f, indent=4)
+    print(f"Success: Posted ASMR {new_video} for USA Audience")
+
 except Exception as e:
     print(f"Error: {e}")
